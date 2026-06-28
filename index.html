@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>zwei teller — einmal kochen, alle essen mit</title>
+<meta name="description" content="Modulares Familienkochen: eine milde Basis für alle, die Erwachsenen-Schicht nur auf den Erwachsenenteller. Schluss mit dem zweiten Topf Nudeln fürs Kind." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    /* Ottolenghi spice palette — saturated, not single-accent cream */
+    --aubergine:#46233E;
+    --aubergine-deep:#371A31;
+    --parchment:#F7EFDD;
+    --parchment-2:#F2E6CE;
+    --terracotta:#CC6B43;
+    --olive:#6E7A3E;
+    --olive-deep:#5C6733;
+    --mustard:#E3A52A;
+    --pomegranate:#B23A2E;
+    --ink:#2C211B;
+    --cream:#F4E9D6;
+    --cream-soft:#F8F1E4;
+
+    --maxw:1120px;
+    --pad-x:clamp(1.25rem, 5vw, 4rem);
+    --sec-y:clamp(4rem, 9vw, 7.5rem);
+    --radius:18px;
+
+    --f-display:'Fraunces', Georgia, serif;
+    --f-body:'Figtree', system-ui, -apple-system, sans-serif;
+    --f-hand:'Caveat', cursive;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+
+  body{
+    margin:0;
+    font-family:var(--f-body);
+    color:var(--ink);
+    background:var(--parchment);
+    font-size:clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{font-family:var(--f-display); font-weight:600; line-height:1.04; margin:0; letter-spacing:-0.01em;}
+  p{margin:0;}
+  a{color:inherit;}
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding-left:var(--pad-x); padding-right:var(--pad-x);}
+
+  .eyebrow{
+    font-family:var(--f-hand);
+    font-size:1.5rem;
+    font-weight:600;
+    line-height:1;
+    display:inline-block;
+    transform:rotate(-2deg);
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(70,35,62,0.94);
+    backdrop-filter:saturate(140%) blur(6px);
+    color:var(--cream);
+    border-bottom:1px solid rgba(244,233,214,0.14);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.85rem; padding-bottom:.85rem;}
+  .brand{display:flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--cream);}
+  .brand .mark{flex:0 0 auto;}
+  .brand .word{font-family:var(--f-display); font-weight:600; font-size:1.4rem; letter-spacing:.01em;}
+  .nav-links{display:flex; align-items:center; gap:1.6rem;}
+  .nav-links a{text-decoration:none; font-weight:500; font-size:.98rem; color:var(--cream); opacity:.85; transition:opacity .2s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-links .nav-cta{
+    background:var(--mustard); color:var(--aubergine-deep); opacity:1;
+    padding:.5rem 1rem; border-radius:999px; font-weight:600;
+  }
+  .nav-cta-link{display:inline-block;}
+  @media (max-width:680px){
+    .nav-text-link{display:none;}
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-flex; align-items:center; gap:.5rem;
+    font-family:var(--f-body); font-weight:600; font-size:1.02rem;
+    border:none; border-radius:999px; cursor:pointer;
+    padding:.85rem 1.5rem; text-decoration:none;
+    transition:transform .18s ease, box-shadow .18s ease, background .2s;
+  }
+  .btn-mustard{background:var(--mustard); color:var(--aubergine-deep);}
+  .btn-terra{background:var(--terracotta); color:var(--cream-soft);}
+  .btn:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(44,33,27,.18);}
+  .btn:focus-visible{outline:3px solid var(--mustard); outline-offset:3px;}
+  a:focus-visible, button:focus-visible, input:focus-visible{outline:3px solid var(--mustard); outline-offset:3px;}
+
+  /* ---------- HERO ---------- */
+  .hero{background:var(--aubergine); color:var(--cream); position:relative; overflow:hidden;}
+  .hero::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(120% 80% at 85% 0%, rgba(227,165,42,.16), transparent 55%),
+               radial-gradient(90% 70% at 0% 100%, rgba(204,107,67,.18), transparent 55%);
+  }
+  .hero-grid{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(2rem,5vw,4rem);
+    align-items:center;
+    padding-top:clamp(3rem,7vw,6rem); padding-bottom:clamp(3.5rem,7vw,6.5rem);
+  }
+  .hero h1{
+    font-size:clamp(2.7rem, 2rem + 4.2vw, 5.1rem);
+    font-weight:600; color:var(--cream); margin:.6rem 0 1.1rem;
+  }
+  .hero h1 .accent{color:var(--mustard); font-style:italic;}
+  .hero-lead{font-size:clamp(1.08rem,1rem + .4vw,1.3rem); color:rgba(244,233,214,.9); max-width:33ch; margin-bottom:1.8rem;}
+  .hero-cta-row{display:flex; align-items:center; gap:1rem; flex-wrap:wrap;}
+  .hero-note{font-family:var(--f-hand); font-size:1.3rem; color:var(--mustard);}
+  .hero-art{position:relative; z-index:1;}
+  .hero-art svg{width:100%; height:auto; display:block; filter:drop-shadow(0 18px 30px rgba(0,0,0,.22));}
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr; text-align:left;}
+    .hero-art{max-width:460px; margin:0 auto;}
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  .section{padding-top:var(--sec-y); padding-bottom:var(--sec-y);}
+  .section--parchment{background:var(--parchment);}
+  .section--olive{background:var(--olive); color:var(--cream);}
+  .section--terra{background:var(--terracotta); color:var(--cream-soft);}
+  .section--mustard{background:var(--mustard); color:var(--aubergine-deep);}
+  .sec-head{max-width:34rem; margin-bottom:clamp(2rem,4vw,3rem);}
+  .sec-head h2{font-size:clamp(2rem, 1.4rem + 2.4vw, 3.3rem); margin:.4rem 0 .8rem;}
+  .sec-head p{font-size:1.1rem; opacity:.92;}
+
+  /* ---------- IDEA / PRINCIPLES ---------- */
+  .idea-lead{font-size:clamp(1.15rem,1rem + .6vw,1.45rem); font-family:var(--f-display); font-weight:400; max-width:48rem; line-height:1.4; margin-bottom:clamp(2.5rem,5vw,3.5rem);}
+  .idea-lead b{color:var(--terracotta); font-weight:600;}
+  .cards-3{display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem;}
+  @media (max-width:820px){ .cards-3{grid-template-columns:1fr;} }
+  .pcard{
+    background:var(--cream-soft); border:1px solid rgba(44,33,27,.08);
+    border-radius:var(--radius); padding:1.8rem 1.6rem;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .pcard:hover{transform:translateY(-4px); box-shadow:0 14px 30px rgba(44,33,27,.1);}
+  .pcard .ic{height:64px; margin-bottom:1rem;}
+  .pcard h3{font-size:1.35rem; margin-bottom:.5rem;}
+  .pcard p{opacity:.85;}
+  .pnum{font-family:var(--f-hand); font-size:1.4rem; color:var(--terracotta); display:block; margin-bottom:.2rem;}
+
+  /* ---------- METHOD ---------- */
+  .method-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; align-items:stretch;}
+  @media (max-width:820px){ .method-grid{grid-template-columns:1fr;} }
+  .mstep{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); border-radius:var(--radius); padding:1.6rem; position:relative;}
+  .mstep .step-k{font-family:var(--f-hand); font-size:1.5rem; color:var(--mustard); line-height:1;}
+  .mstep h3{color:var(--cream); font-size:1.4rem; margin:.3rem 0 .5rem;}
+  .mstep p{color:rgba(244,233,214,.88); font-size:1rem;}
+  .mstep .mic{height:54px; margin-top:1rem;}
+
+  /* ---------- DISHES ---------- */
+  .dishes{display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem;}
+  @media (max-width:780px){ .dishes{grid-template-columns:1fr;} }
+  .dish{
+    background:var(--cream-soft); border:1px solid rgba(44,33,27,.09);
+    border-radius:var(--radius); padding:1.7rem 1.7rem 1.5rem;
+    display:flex; gap:1.2rem; transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .dish:hover{transform:translateY(-4px); box-shadow:0 16px 32px rgba(44,33,27,.1);}
+  .dish .doodle{flex:0 0 70px;}
+  .dish .doodle svg{width:70px; height:70px;}
+  .dish h3{font-size:1.45rem; margin-bottom:.35rem;}
+  .dish .desc{opacity:.82; font-size:1rem; margin-bottom:.9rem;}
+  .split{display:flex; flex-direction:column; gap:.45rem; font-size:.95rem;}
+  .split .row{display:flex; gap:.55rem; align-items:baseline;}
+  .split .tag{
+    font-family:var(--f-hand); font-size:1.15rem; line-height:1; flex:0 0 auto;
+    padding-top:.15rem; min-width:3.2rem;
+  }
+  .split .tag.kind{color:var(--olive);}
+  .split .tag.gross{color:var(--pomegranate);}
+  .split .row span:last-child{opacity:.82;}
+
+  /* ---------- QUOTE ---------- */
+  .quote-block{text-align:center; padding-top:calc(var(--sec-y) * .9); padding-bottom:calc(var(--sec-y) * .9);}
+  .quote-block .qmark{font-family:var(--f-display); font-size:5rem; line-height:.4; color:rgba(244,233,214,.5); display:block; height:2.5rem;}
+  .quote-block blockquote{
+    font-family:var(--f-display); font-weight:500; font-style:italic;
+    font-size:clamp(2rem, 1.4rem + 3vw, 3.8rem); line-height:1.08;
+    max-width:18ch; margin:1rem auto 1.2rem;
+  }
+  .quote-block cite{font-family:var(--f-hand); font-size:1.5rem; font-style:normal; opacity:.9;}
+
+  /* ---------- NEWSLETTER ---------- */
+  .news{background:var(--parchment-2);}
+  .news-card{
+    background:var(--aubergine); color:var(--cream);
+    border-radius:24px; padding:clamp(2.2rem,5vw,4rem);
+    display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(2rem,4vw,3.5rem); align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .news-card::after{content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(100% 100% at 100% 0%, rgba(227,165,42,.18), transparent 60%);}
+  .news-card h2{color:var(--cream); font-size:clamp(1.9rem,1.4rem + 2vw,3rem); margin-bottom:.8rem; position:relative; z-index:1;}
+  .news-card p{color:rgba(244,233,214,.88); position:relative; z-index:1;}
+  .form-wrap{position:relative; z-index:1;}
+  .nl-form{display:flex; flex-direction:column; gap:.75rem;}
+  .nl-form input[type=email]{
+    font-family:var(--f-body); font-size:1.05rem;
+    padding:.95rem 1.1rem; border-radius:12px; border:2px solid transparent;
+    background:var(--cream-soft); color:var(--ink);
+  }
+  .nl-form input::placeholder{color:rgba(44,33,27,.45);}
+  .nl-form .btn{justify-content:center; width:100%;}
+  .nl-fine{font-family:var(--f-body); font-size:.85rem; color:rgba(244,233,214,.7); margin-top:.85rem;}
+  .nl-success{display:none; background:rgba(244,233,214,.12); border:1px solid rgba(244,233,214,.3); border-radius:14px; padding:1.4rem; text-align:center;}
+  .nl-success.show{display:block;}
+  .nl-success .big{font-family:var(--f-display); font-size:1.5rem; color:var(--mustard); margin-bottom:.3rem;}
+  .nl-success p{color:var(--cream);}
+  .nl-error{color:var(--mustard); font-size:.9rem; min-height:1.1rem; font-weight:600;}
+  @media (max-width:760px){ .news-card{grid-template-columns:1fr;} }
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--aubergine-deep); color:rgba(244,233,214,.8); padding-top:3rem; padding-bottom:2.4rem;}
+  .foot-inner{display:flex; flex-wrap:wrap; justify-content:space-between; gap:1.5rem; align-items:flex-end;}
+  .foot-brand{display:flex; flex-direction:column; gap:.4rem;}
+  .foot-brand .word{font-family:var(--f-display); font-size:1.5rem; color:var(--cream);}
+  .foot-brand .tl{font-family:var(--f-hand); font-size:1.3rem; color:var(--mustard);}
+  .foot-meta{font-size:.85rem; text-align:right; opacity:.7; line-height:1.7;}
+
+  /* ---------- reveal anim ---------- */
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:none;}
+  @media (prefers-reduced-motion: reduce){ .reveal{opacity:1 !important; transform:none !important;} }
+
+  .float{animation:floaty 6s ease-in-out infinite;}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  @media (prefers-reduced-motion: reduce){ .float{animation:none;} }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav>
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="zwei teller — Startseite">
+      <span class="mark" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="17" stroke="#E3A52A" stroke-width="2.4"/>
+          <circle cx="20" cy="20" r="10.5" stroke="#CC6B43" stroke-width="2.4"/>
+          <path d="M20 6 C 21 11, 19 13, 20 18" stroke="#6E7A3E" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M20 7 C 16 9, 16 12, 19 13" stroke="#6E7A3E" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        </svg>
+      </span>
+      <span class="word">zwei teller</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-text-link" href="#idee">Die Idee</a>
+      <a class="nav-text-link" href="#gerichte">Gerichte</a>
+      <a class="nav-cta-link" href="#newsletter"><span class="nav-cta">Newsletter</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow" style="color:var(--mustard);">für kochende Eltern</span>
+      <h1>Einmal kochen.<br><span class="accent">Alle</span> essen mit.</h1>
+      <p class="hero-lead">Eine milde Basis für den ganzen Tisch — die erwachsene Schicht aus Schärfe, Säure und Kräutern kommt nur auf den Erwachsenenteller. Kein zweiter Topf Nudeln mehr fürs Kind.</p>
+      <div class="hero-cta-row">
+        <a href="#newsletter" class="btn btn-mustard">Beim Newsletter dabei sein</a>
+        <span class="hero-note">kein zweites Kochen ✶</span>
+      </div>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <!-- SIGNATURE: one base splits into two plates -->
+      <svg viewBox="0 0 520 470" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Basis bowl (top center) -->
+        <g class="float">
+          <ellipse cx="260" cy="92" rx="86" ry="26" fill="#371A31"/>
+          <path d="M176 88 C 180 138, 200 162, 260 162 C 320 162, 340 138, 344 88 Z" fill="#CC6B43"/>
+          <ellipse cx="260" cy="86" rx="84" ry="25" fill="#E3A52A"/>
+          <ellipse cx="260" cy="86" rx="84" ry="25" fill="none" stroke="#371A31" stroke-width="3"/>
+          <!-- stuff in the base -->
+          <circle cx="232" cy="84" r="6" fill="#B23A2E"/>
+          <circle cx="272" cy="90" r="7" fill="#B23A2E"/>
+          <path d="M250 78 q 8 -8 16 0" stroke="#6E7A3E" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+          <path d="M226 92 q 6 -6 12 0" stroke="#6E7A3E" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+        </g>
+
+        <!-- split arrows -->
+        <path d="M214 150 C 150 196, 120 230, 112 286" stroke="#E3A52A" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 12" fill="none"/>
+        <path d="M306 150 C 370 196, 400 230, 408 286" stroke="#E3A52A" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 12" fill="none"/>
+        <path d="M105 280 l 7 12 l 12 -6" stroke="#E3A52A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M415 280 l -7 12 l -12 -6" stroke="#E3A52A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+        <!-- LEFT plate: Kinderteller (plain) -->
+        <g>
+          <ellipse cx="118" cy="360" rx="104" ry="34" fill="#371A31"/>
+          <ellipse cx="118" cy="352" rx="104" ry="34" fill="#F4E9D6"/>
+          <ellipse cx="118" cy="352" rx="104" ry="34" fill="none" stroke="#371A31" stroke-width="3"/>
+          <ellipse cx="118" cy="352" rx="72" ry="22" fill="none" stroke="#CC6B43" stroke-width="2.4"/>
+          <!-- mild base only -->
+          <circle cx="100" cy="350" r="9" fill="#CC6B43"/>
+          <circle cx="128" cy="356" r="10" fill="#E3A52A"/>
+          <circle cx="118" cy="344" r="7" fill="#CC6B43"/>
+        </g>
+
+        <!-- RIGHT plate: Erwachsenenteller (base + adult layer) -->
+        <g>
+          <ellipse cx="402" cy="360" rx="104" ry="34" fill="#371A31"/>
+          <ellipse cx="402" cy="352" rx="104" ry="34" fill="#F4E9D6"/>
+          <ellipse cx="402" cy="352" rx="104" ry="34" fill="none" stroke="#371A31" stroke-width="3"/>
+          <ellipse cx="402" cy="352" rx="72" ry="22" fill="none" stroke="#CC6B43" stroke-width="2.4"/>
+          <!-- same base -->
+          <circle cx="384" cy="350" r="9" fill="#CC6B43"/>
+          <circle cx="412" cy="356" r="10" fill="#E3A52A"/>
+          <circle cx="402" cy="344" r="7" fill="#CC6B43"/>
+          <!-- + adult layer: chili flakes, herb ticks, sumac onion rings, harissa swirl -->
+          <path d="M360 338 q 10 -7 22 -2" stroke="#B23A2E" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+          <path d="M428 346 q 8 6 18 3" stroke="#6E7A3E" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+          <path d="M398 332 q 6 -7 13 -3" stroke="#6E7A3E" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+          <circle cx="372" cy="360" r="4" fill="#B23A2E"/>
+          <circle cx="430" cy="360" r="4" fill="#B23A2E"/>
+          <circle cx="402" cy="366" r="3.4" fill="#B23A2E"/>
+          <path d="M388 358 a 9 6 0 1 0 18 0" stroke="#46233E" stroke-width="2.6" fill="none"/>
+        </g>
+
+        <!-- handwritten labels -->
+        <text x="118" y="412" text-anchor="middle" font-family="Caveat, cursive" font-size="25" fill="#F4E9D6">der Kinderteller</text>
+        <text x="402" y="404" text-anchor="middle" font-family="Caveat, cursive" font-size="25" fill="#E3A52A">+ die Erwachsenen-</text>
+        <text x="402" y="430" text-anchor="middle" font-family="Caveat, cursive" font-size="25" fill="#E3A52A">Schicht</text>
+        <text x="378" y="60" text-anchor="middle" font-family="Caveat, cursive" font-size="24" fill="#F4E9D6" transform="rotate(-6 378 60)">eine Basis</text>
+        <path d="M345 66 C 355 78, 345 86, 332 90" stroke="#F4E9D6" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        <path d="M332 90 l 6 -2 m -6 2 l 2 -6" stroke="#F4E9D6" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ================= DIE IDEE ================= -->
+<section class="section section--parchment" id="idee">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" style="color:var(--terracotta);">die Gabelung</span>
+      <h2>Schluss mit der Extrawurst.</h2>
+      <p>Du stehst an der Gabelung: noch schnell extra Nudeln fürs Kind — oder es schmeckt ihr einfach nicht. „zwei teller" löst das nicht im Topf, sondern auf dem Teller.</p>
+    </div>
+
+    <p class="idea-lead reveal">Erwachsenen-Geschmack ist fast immer eine <b>zusätzliche Schicht</b> obendrauf: Säure, Schärfe, rohe Zwiebel, herbe Kräuter, die geliebten „grünen Stückchen". Genau das, was ein Vierjähriger ablehnt. Also kochst du <b>eine milde Basis für alle</b> — und der Akzent landet nur dort, wo er gewollt ist.</p>
+
+    <div class="cards-3">
+      <div class="pcard reveal">
+        <div class="ic" aria-hidden="true">
+          <!-- bowl icon -->
+          <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+            <path d="M10 30 C 12 48, 22 54, 32 54 C 42 54, 52 48, 54 30 Z" fill="#E3A52A"/>
+            <ellipse cx="32" cy="30" rx="22" ry="7" fill="#F8F1E4" stroke="#2C211B" stroke-width="2.6"/>
+            <path d="M10 30 C 12 48, 22 54, 32 54 C 42 54, 52 48, 54 30" stroke="#2C211B" stroke-width="2.6" fill="none"/>
+            <path d="M26 26 q 6 -7 12 0" stroke="#6E7A3E" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <span class="pnum">eins</span>
+        <h3>Eine milde Basis</h3>
+        <p>Sättigend, freundlich, kindertauglich — und stabil genug, um geteilt zu werden. Knödel, Ofengemüse, eine Tomatensauce.</p>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="ic" aria-hidden="true">
+          <!-- chili icon -->
+          <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+            <path d="M22 16 q 10 -6 16 2" stroke="#6E7A3E" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M38 18 C 50 24, 50 44, 36 52 C 26 58, 16 50, 20 40 C 24 30, 30 22, 38 18 Z" fill="#B23A2E" stroke="#2C211B" stroke-width="2.6"/>
+            <path d="M40 26 q 3 8 -2 18" stroke="#F8F1E4" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".7"/>
+          </svg>
+        </div>
+        <span class="pnum">zwei</span>
+        <h3>Der Akzent obendrauf</h3>
+        <p>Harissa, Sumach, Chili, Zitrone, frische Kräuter — die ganze Würze kommt erst auf den Erwachsenenteller. Voller Geschmack, keine Kompromisse.</p>
+      </div>
+
+      <div class="pcard reveal">
+        <div class="ic" aria-hidden="true">
+          <!-- hands / mitmachen icon -->
+          <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+            <circle cx="32" cy="20" r="9" fill="#E3A52A" stroke="#2C211B" stroke-width="2.6"/>
+            <path d="M16 50 C 16 38, 24 33, 32 33 C 40 33, 48 38, 48 50" stroke="#CC6B43" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M22 44 q 10 8 20 0" stroke="#6E7A3E" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <span class="pnum">drei</span>
+        <h3>Das Kind kocht mit</h3>
+        <p>Selbst gerollt, selbst gedippt — wer mitmacht, isst mehr. Eigentum am Essen ist der stärkste Trick von allen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SO FUNKTIONIERT'S ================= -->
+<section class="section section--olive" id="methode">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" style="color:var(--mustard);">so funktioniert's</span>
+      <h2>Drei Schritte, ein Abendessen.</h2>
+      <p>Wenn du nach Ottolenghi-Logik kochst, machst du das längst — Basis, etwas Cremiges, etwas Knuspriges, ein Akzent. Du trennst den Akzent nur ab, statt ihn unterzurühren.</p>
+    </div>
+
+    <div class="method-grid">
+      <div class="mstep reveal">
+        <span class="step-k">Schritt 1</span>
+        <h3>Basis kochen</h3>
+        <p>Eine milde Grundlage für den ganzen Tisch — ohne Schärfe, ohne Säurespitze.</p>
+        <div class="mic" aria-hidden="true">
+          <svg viewBox="0 0 80 60" width="100%" height="54" fill="none">
+            <path d="M16 26 C 18 44, 28 50, 40 50 C 52 50, 62 44, 64 26 Z" fill="#E3A52A"/>
+            <ellipse cx="40" cy="26" rx="24" ry="7" fill="#F4E9D6" stroke="#3a4222" stroke-width="2.4"/>
+            <path d="M16 26 C 18 44, 28 50, 40 50 C 52 50, 62 44, 64 26" stroke="#3a4222" stroke-width="2.4" fill="none"/>
+            <path d="M34 16 q 0 -6 4 -8 M44 18 q 2 -6 6 -7" stroke="#F4E9D6" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="mstep reveal">
+        <span class="step-k">Schritt 2</span>
+        <h3>Teilen</h3>
+        <p>Eine Kelle für den Kinderteller raus — <em>bevor</em> Würze, Chili und Kräuter dazukommen.</p>
+        <div class="mic" aria-hidden="true">
+          <svg viewBox="0 0 80 60" width="100%" height="54" fill="none">
+            <path d="M40 8 v 18" stroke="#F4E9D6" stroke-width="3" stroke-linecap="round"/>
+            <path d="M40 26 C 26 30, 18 38, 16 50" stroke="#F4E9D6" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 9" fill="none"/>
+            <path d="M40 26 C 54 30, 62 38, 64 50" stroke="#F4E9D6" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 9" fill="none"/>
+            <circle cx="16" cy="52" r="4" fill="#F4E9D6"/>
+            <circle cx="64" cy="52" r="4" fill="#B23A2E"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="mstep reveal">
+        <span class="step-k">Schritt 3</span>
+        <h3>Würzen — nur die Großen</h3>
+        <p>Harissa, Sumach-Zwiebeln, Zitrone auf den Rest. Zwei Teller, ein Geschmackserlebnis für jeden.</p>
+        <div class="mic" aria-hidden="true">
+          <svg viewBox="0 0 80 60" width="100%" height="54" fill="none">
+            <path d="M30 14 l 20 0 l -2 14 l -16 0 z" fill="#CC6B43" stroke="#3a4222" stroke-width="2.4"/>
+            <path d="M34 14 l 12 0 l -1 -6 l -10 0 z" fill="#46233E" stroke="#3a4222" stroke-width="2.2"/>
+            <circle cx="26" cy="40" r="2.4" fill="#B23A2E"/>
+            <circle cx="40" cy="46" r="2.4" fill="#B23A2E"/>
+            <circle cx="54" cy="42" r="2.4" fill="#B23A2E"/>
+            <circle cx="34" cy="50" r="2.4" fill="#6E7A3E"/>
+            <circle cx="48" cy="52" r="2.4" fill="#6E7A3E"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GERICHTE ================= -->
+<section class="section section--parchment" id="gerichte">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" style="color:var(--terracotta);">aus echten Küchen</span>
+      <h2>Gerichte für den ganzen Tisch.</h2>
+      <p>Erprobt an echten Kindern und ungeduldigen Erwachsenen. Jedes läuft nach demselben Prinzip: eine Basis, zwei Teller.</p>
+    </div>
+
+    <div class="dishes">
+      <div class="dish reveal">
+        <div class="doodle" aria-hidden="true">
+          <svg viewBox="0 0 70 70" fill="none">
+            <path d="M10 34 C 12 54, 26 60, 35 60 C 44 60, 58 54, 60 34 Z" fill="#B23A2E"/>
+            <ellipse cx="35" cy="34" rx="25" ry="7" fill="#CC6B43" stroke="#2C211B" stroke-width="2.4"/>
+            <path d="M10 34 C 12 54, 26 60, 35 60 C 44 60, 58 54, 60 34" stroke="#2C211B" stroke-width="2.4" fill="none"/>
+            <circle cx="35" cy="44" r="7" fill="#E3A52A"/>
+            <circle cx="35" cy="44" r="3" fill="#CC6B43"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Shakshuka</h3>
+          <p class="desc">Tomaten-Paprika-Basis, mild geköchelt. Der saubere Split direkt im Topf.</p>
+          <div class="split">
+            <div class="row"><span class="tag kind">Kind</span><span>Ei darin pochiert, Brot zum Dippen.</span></div>
+            <div class="row"><span class="tag gross">Groß</span><span>+ Harissa, Kreuzkümmel, Chili, Koriander.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dish reveal">
+        <div class="doodle" aria-hidden="true">
+          <svg viewBox="0 0 70 70" fill="none">
+            <path d="M14 22 C 30 14, 50 20, 56 34 C 50 30, 40 30, 32 34 C 24 38, 18 32, 14 22 Z" fill="#CC6B43" stroke="#2C211B" stroke-width="2.4"/>
+            <path d="M48 24 C 56 28, 58 40, 50 48 C 44 54, 34 50, 36 42" stroke="#E3A52A" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <path d="M22 30 q 4 6 10 6" stroke="#6E7A3E" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Ofengemüse</h3>
+          <p class="desc">Karotte, Kürbis, Süßkartoffel — die Hitze macht sie von allein süß.</p>
+          <div class="split">
+            <div class="row"><span class="tag kind">Kind</span><span>Pur oder mit einem Klecks Joghurt.</span></div>
+            <div class="row"><span class="tag gross">Groß</span><span>+ Harissa-Joghurt, Pistazie, Kräuter.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dish reveal">
+        <div class="doodle" aria-hidden="true">
+          <svg viewBox="0 0 70 70" fill="none">
+            <rect x="14" y="22" width="42" height="26" rx="5" transform="rotate(-8 35 35)" fill="#E3A52A" stroke="#2C211B" stroke-width="2.4"/>
+            <path d="M18 30 l 36 -5 M20 38 l 36 -5" stroke="#CC6B43" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Halloumi-Finger</h3>
+          <p class="desc">Quietschig, salzig, goldbraun gebraten. Fingerfood heißt Kontrolle fürs Kind.</p>
+          <div class="split">
+            <div class="row"><span class="tag kind">Kind</span><span>Pur, zum Greifen.</span></div>
+            <div class="row"><span class="tag gross">Groß</span><span>+ Dattel-Sumach-Zwiebeln, Zitrone.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dish reveal">
+        <div class="doodle" aria-hidden="true">
+          <svg viewBox="0 0 70 70" fill="none">
+            <circle cx="24" cy="40" r="13" fill="#CC6B43" stroke="#2C211B" stroke-width="2.4"/>
+            <circle cx="44" cy="34" r="13" fill="#E3A52A" stroke="#2C211B" stroke-width="2.4"/>
+            <path d="M19 36 q 5 5 10 0 M39 30 q 5 5 10 0" stroke="#2C211B" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Breznknödel</h3>
+          <p class="desc">Selbst gerollt — und genau deshalb geliebt. Die milde Basis schlechthin.</p>
+          <div class="split">
+            <div class="row"><span class="tag kind">Kind</span><span>Braune Butter und ein paar Erbsen.</span></div>
+            <div class="row"><span class="tag gross">Groß</span><span>+ Pilzragout, Salbei, herber Salat.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUOTE ================= -->
+<section class="section--terra">
+  <div class="wrap quote-block reveal">
+    <span class="qmark" aria-hidden="true">&ldquo;</span>
+    <blockquote>Kleiner Trick, große Wirkung.</blockquote>
+    <cite>— die ganze Idee in vier Worten</cite>
+  </div>
+</section>
+
+<!-- ================= NEWSLETTER ================= -->
+<section class="section news" id="newsletter">
+  <div class="wrap">
+    <div class="news-card reveal">
+      <div>
+        <span class="eyebrow" style="color:var(--mustard);">ein Gericht pro Woche</span>
+        <h2>Für den ganzen Tisch — direkt ins Postfach.</h2>
+        <p>Jede Woche ein erprobtes Gericht mit fertigem Split: was auf den Kinderteller kommt, was auf den großen. Kein Spam, kein Schnickschnack — nur das nächste Essen, das ohne zweites Kochen auskommt.</p>
+      </div>
+
+      <div class="form-wrap">
+        <form class="nl-form" id="nlForm" novalidate>
+          <label for="nlEmail" style="font-weight:600; color:var(--cream);">E-Mail-Adresse</label>
+          <input type="email" id="nlEmail" name="email" placeholder="deine@email.de" autocomplete="email" required />
+          <div class="nl-error" id="nlError" role="alert"></div>
+          <button type="submit" class="btn btn-mustard">Dabei sein</button>
+        </form>
+        <div class="nl-success" id="nlSuccess" role="status">
+          <div class="big">Schön, dass du dabei bist! 🌿</div>
+          <p>Das erste Gericht ist bald in deinem Postfach.</p>
+        </div>
+        <p class="nl-fine">Einmal pro Woche. Abmelden jederzeit mit einem Klick.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <span class="word">zwei teller</span>
+      <span class="tl">einmal kochen, alle essen mit</span>
+    </div>
+    <div class="foot-meta">
+      Aus München, mit Hunger gemacht.<br>
+      &copy; <span id="yr"></span> zwei teller — Arbeitstitel
+    </div>
+  </div>
+</footer>
+
+<script>
+  // year
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // scroll reveal
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {threshold:0.14, rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  })();
+
+  // newsletter form (front-end only — needs a backend/service to actually collect addresses)
+  (function(){
+    var form = document.getElementById('nlForm');
+    var input = document.getElementById('nlEmail');
+    var err = document.getElementById('nlError');
+    var ok = document.getElementById('nlSuccess');
+    function valid(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var v = input.value.trim();
+      if(!valid(v)){ err.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; input.focus(); return; }
+      err.textContent = '';
+      // TODO beim Deploy: hier an einen Newsletter-Dienst senden
+      // (z.B. Buttondown / MailerLite / Cloudflare Function -> Resend).
+      form.style.display = 'none';
+      ok.classList.add('show');
+    });
+  })();
+</script>
+
+</body>
+</html>
