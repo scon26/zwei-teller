@@ -34,7 +34,21 @@ functions/api/confirm.js    ──►  KV: sub:<email> = { confirmedAt }
 
 Für eine startende Newsletter-Seite reicht das mit großem Abstand.
 
-## Einrichtung (einmalig)
+## Schnellstart per Script
+
+Den CLI-Teil (KV anlegen, ID in `wrangler.toml` eintragen, Secret & Variablen
+setzen, Pages-Projekt anlegen) erledigt das mitgelieferte Script. Du brauchst
+nur deinen Resend-API-Key:
+
+```bash
+bash setup.sh
+```
+
+Es startet bei Bedarf `wrangler login`, fragt Absender/URL ab und legt alles an.
+Den einen Dashboard-Schritt (KV-Binding ans Pages-Projekt) nennt es dir am Ende.
+Wer es lieber manuell macht, folgt den Schritten unten.
+
+## Einrichtung (einmalig, manuell)
 
 ### 1. Resend-Konto + API-Key
 1. Konto auf [resend.com](https://resend.com) anlegen.
