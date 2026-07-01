@@ -1,0 +1,6 @@
+# Cloudflare / Wrangler
+.dev.vars
+.wrangler/
+
+# OS / Editor
+.DS_Store

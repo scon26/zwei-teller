@@ -575,12 +575,15 @@
         <form class="nl-form" id="nlForm" novalidate>
           <label for="nlEmail" style="font-weight:600; color:var(--cream);">E-Mail-Adresse</label>
           <input type="email" id="nlEmail" name="email" placeholder="deine@email.de" autocomplete="email" required />
+          <!-- Honeypot gegen Bots: für Menschen unsichtbar, bitte leer lassen -->
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
+                 style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;" />
           <div class="nl-error" id="nlError" role="alert"></div>
           <button type="submit" class="btn btn-mustard">Dabei sein</button>
         </form>
         <div class="nl-success" id="nlSuccess" role="status">
-          <div class="big">Schön, dass du dabei bist! 🌿</div>
-          <p>Das erste Gericht ist bald in deinem Postfach.</p>
+          <div class="big">Fast geschafft! 🌿</div>
+          <p>Wir haben dir eine E-Mail geschickt. Klick auf den Bestätigungslink darin — dann bist du dabei.</p>
         </div>
         <p class="nl-fine">Einmal pro Woche. Abmelden jederzeit mit einem Klick.</p>
       </div>
@@ -616,22 +619,42 @@
     els.forEach(function(e){ io.observe(e); });
   })();
 
-  // newsletter form (front-end only — needs a backend/service to actually collect addresses)
+  // newsletter form — sendet an die Cloudflare-Function /api/subscribe (Double-Opt-In via Resend)
   (function(){
     var form = document.getElementById('nlForm');
     var input = document.getElementById('nlEmail');
     var err = document.getElementById('nlError');
     var ok = document.getElementById('nlSuccess');
+    var btn = form.querySelector('button[type=submit]');
     function valid(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var v = input.value.trim();
       if(!valid(v)){ err.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; input.focus(); return; }
       err.textContent = '';
-      // TODO beim Deploy: hier an einen Newsletter-Dienst senden
-      // (z.B. Buttondown / MailerLite / Cloudflare Function -> Resend).
-      form.style.display = 'none';
-      ok.classList.add('show');
+
+      var label = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Moment …';
+
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {'content-type':'application/json'},
+        body: JSON.stringify({ email: v, website: (form.website && form.website.value) || '' })
+      })
+      .then(function(res){ return res.json().catch(function(){ return {}; }).then(function(d){ return {res:res, data:d}; }); })
+      .then(function(r){
+        if(!r.res.ok || !r.data.ok){
+          err.textContent = (r.data && r.data.error) || 'Da ist etwas schiefgelaufen. Bitte später noch einmal versuchen.';
+          btn.disabled = false; btn.textContent = label;
+          return;
+        }
+        form.style.display = 'none';
+        ok.classList.add('show');
+      })
+      .catch(function(){
+        err.textContent = 'Keine Verbindung. Bitte später noch einmal versuchen.';
+        btn.disabled = false; btn.textContent = label;
+      });
     });
   })();
 </script>
